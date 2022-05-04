@@ -7,6 +7,7 @@ import (
 	"math/big"
 	"net/http"
 	"time"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -57,7 +58,6 @@ type Proposals []struct {
 	} `json:"total_deposit"`
 	VotingStartTime time.Time `json:"voting_start_time"`
 	VotingEndTime   time.Time `json:"voting_end_time"`
-	// Content2        Content2  `json:"proposals"`
 }
 
 type PropsalFiltered []struct {
@@ -161,7 +161,6 @@ func getCommunityPool(c *gin.Context) {
 		return
 	}
 
-	// snippet only
 	var result CommunityPool
 	if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to go struct pointer
 		fmt.Println("Can not unmarshal JSON")
@@ -266,62 +265,30 @@ func getTotalWithdrawnAmount(c *gin.Context) {
 		fmt.Println(err)
 		return
 	}
-	// fmt.Println(string(body))
 	var result ResponseProposalFiltered
 	if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to go struct pointer
 		fmt.Println("Can not unmarshal JSON")
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "ERROR"})
 	}
-	// fmt.Println(result)
 
-	var list []string
+	sum := big.NewInt(0)
+	z := &big.Int{}
 
 	for _, rec := range result.PropsalFiltered {
-		// fmt.Println(rec.TotalDeposits.WithdrawnTotal())
-		list = append(list, rec.TotalDeposits.WithdrawnTotal())
-	}
-
-	fmt.Println("list", list)
-
-	sum := big.NewInt(0)
-	for i := 0; i < len(list); i++ {
-		z := &big.Int{}
-		z, success := z.SetString(list[i], 10)
-		if !success {
-			panic("Error converting ... ")
+		for _, loop2 := range rec.TotalDeposits {
+			z, success := z.SetString(loop2.Amount, 10)
+			if !success {
+				panic("Error converting ... ")
+			}
+			fmt.Println("z =", z)
+			sum = sum.Add(sum, z)
 		}
-		sum = sum.Add(sum, z)
+
 	}
-
 	total := sum.String()
-
 	c.IndentedJSON(http.StatusOK, total)
-
 }
 
-func (u TotalDeposits) WithdrawnTotal() string {
-	var list []string
-
-	for _, TotalDeposit := range u {
-		list = append(list, TotalDeposit.Amount)
-	}
-
-	fmt.Println("list", list)
-
-	sum := big.NewInt(0)
-	for i := 0; i < len(list); i++ {
-		z := &big.Int{}
-		z, success := z.SetString(list[i], 10)
-		if !success {
-			panic("Error converting ... ")
-		}
-		sum = sum.Add(sum, z)
-	}
-
-	total := sum.String()
-
-	return total
-}
 
 func check() gin.HandlerFunc {
 	return func(c *gin.Context) {
