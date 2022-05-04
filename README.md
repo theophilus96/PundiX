@@ -13,9 +13,14 @@ GET http://localhost:8080/communitypool
 ```
 Response
 ```
-pool:
-- amount: "35099250274981473761860525.485731319087970919"
-  denom: FX
+{
+    "pool": [
+        {
+            "denom": "FX",
+            "amount": "35100737564691730392608347.427772988227487229"
+        }
+    ]
+}
 ```
 
 
