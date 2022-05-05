@@ -600,3 +600,27 @@ Response
 "90040310040000000000000"
 ```
  
+
+## FAQ
+
+**Qn: Do we need to git clone the repo before running the Get request?**
+
+A: Nope, you don't have to download the entire repo. You only have to download the Final folder and run Main.go file. That would help start up the HTTP server to which you can send requests.
+
+
+**Qn: Should we be replacing the localhost with a known validator IP address?**
+
+A: The validator IP address has already been configured on the backend of the code. Hence, by running the queries such as:
+```
+GET http://localhost:8080/communitypool
+```
+We will still be able to retrieve the same results.
+
+
+## Commonly encountered problems
+
+Do also note that I am using Go 1.18. It is known to cause some errors on Macs. This was caused by an old version of golang.org/x/sys
+```
+go get -u golang.org/x/sys
+```
+Running the code above would help solve the issue.
