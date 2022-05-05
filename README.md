@@ -607,6 +607,12 @@ Response
 
 A: Nope, you don't have to download the entire repo. You only have to download the Final folder and run Main.go file. That would help start up the HTTP server to which you can send requests.
 
+From the command line in the directory containing main.go, run the code. Use a dot argument to mean “run code in the current directory.”
+
+```
+$ go run .
+```
+
 
 **Qn: Should we be replacing the localhost with a known validator IP address?**
 
